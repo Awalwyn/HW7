@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Avery Walwyn || Section 002
  *
  *   This java file contains the problem solutions for the methods selectionSort,
  *   mergeSortDivisibleByKFirst, asteroidsDestroyed, and numRescueCanoes methods.
@@ -37,10 +37,21 @@ public class ProblemSolutions {
         int n = values.length;
 
         for (int i = 0; i < n - 1; i++) {
-
-            // YOU CODE GOES HERE -- COMPLETE THE INNER LOOP OF THIS
-            // "SELECTION SORT" ALGORITHM.
-            // DO NOT FORGET TO ADD YOUR NAME / SECTION ABOVE
+            int val = i;
+            for (int j = i + 1; j < n; j++) {
+                if (ascending) {
+                    if (values[j] < values[val]) {
+                        val = j;
+                    }
+                }else {
+                    if (values[j] > values[val]) {
+                        val = j;
+                    }
+                }
+            }
+            int holder = values[i];
+            values[i] = values[val];
+            values[val] = holder;
 
         }
 
@@ -92,19 +103,34 @@ public class ProblemSolutions {
 
     private void mergeDivisbleByKFirst(int arr[], int k, int left, int mid, int right)
     {
-        // YOUR CODE GOES HERE, THIS METHOD IS NO MORE THAN THE STANDARD MERGE PORTION
-        // OF A MERGESORT, EXCEPT THE NUMBERS DIVISIBLE BY K MUST GO FIRST WITHIN THE
-        // SEQUENCE PER THE DISCUSSION IN THE PROLOGUE ABOVE.
-        //
-        // NOTE: YOU CAN PROGRAM THIS WITH A SPACE COMPLEXITY OF O(1) OR O(N LOG N).
-        // AGAIN, THIS IS REFERRING TO SPACE COMPLEXITY. O(1) IS IN-PLACE, O(N LOG N)
-        // ALLOCATES AUXILIARY DATA STRUCTURES (TEMPORARY ARRAYS). IT WILL BE EASIER
-        // TO CODE WITH A SPACE COMPLEXITY OF O(N LOG N), WHICH IS FINE FOR PURPOSES
-        // OF THIS PROGRAMMING EXERCISES.
-
-        return;
-
-    }
+      //create temp arrays for left and right
+      int[] leftSide = Arrays.copyOfRange(arr, left, mid + 1);
+      int[] rightSide = Arrays.copyOfRange(arr, mid + 1, right + 1);
+  
+      int i = 0, j = 0, index = left;
+  
+      // Merge the two arrays with priority to numbers divisible by k
+      while (i < leftSide.length && j < rightSide.length) {
+          // If the left element is divisible by k and the right one isn't
+          if (leftSide[i] % k == 0 && (rightSide[j] % k != 0 || leftSide[i] <= rightSide[j])) {
+              arr[index++] = leftSide[i++];
+          } else if (rightSide[j] % k == 0 && (leftSide[i] % k != 0 || rightSide[j] <= leftSide[i])) {
+              arr[index++] = rightSide[j++];
+          } else if (leftSide[i] <= rightSide[j]) {
+              arr[index++] = leftSide[i++];
+          } else {
+              arr[index++] = rightSide[j++];
+          }
+      }
+  
+      // Add any remaining elements in leftSide or rightSide
+      while (i < leftSide.length) {
+          arr[index++] = leftSide[i++];
+      }
+      while (j < rightSide.length) {
+          arr[index++] = rightSide[j++];
+      }
+  }
 
 
     /**
@@ -155,8 +181,29 @@ public class ProblemSolutions {
     public static boolean asteroidsDestroyed(int mass, int[] asteroids) {
 
         // YOUR CODE GOES HERE, CONSIDER USING ARRAYS.SORT()
+        if (asteroids.length ==0) {
+            return true;
+        }
+        if (mass == 0) {
+            return false;
+        }
+      
+        Arrays.sort(asteroids);
+        int previousMass = mass;
 
-        return false;
+        for (int asteroid : asteroids) {
+            //if larger, planet absorbs asteroid, else can not destroy
+            if (previousMass >= asteroid){
+                previousMass += asteroid;
+                
+            } else {
+               return false;
+            }
+        }
+//account for 0 param val
+        
+
+        return true;
 
     }
 
@@ -193,8 +240,25 @@ public class ProblemSolutions {
     public static int numRescueSleds(int[] people, int limit) {
 
         // YOUR CODE GOES HERE, CONSIDER USING ARRAYS.SORT
+        Arrays.sort(people);
+        //pointers for weight and counter for sled
+        int sleds = 0;
+        int low = 0;
+        int high = people.length - 1;
 
-        return -1;
+        if (people.length == 0) {
+            return 0;
+        }
+
+        while (low <=high) {
+            if (people[low] + people[high] <= limit) {
+                low++;
+            }
+            high--;
+            sleds++;
+        }
+
+        return sleds;
 
     }
 
